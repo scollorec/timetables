@@ -3,7 +3,7 @@
 const API_KEY = 'dadca3c3602d43d7abf660100d656c43';
 
 // Cricklewood station NAPTAN code
-const STATION_ID = '940GZZLUCRI';
+const STATION_ID = '940GZZLUWIG';
 //const STATION_ID = '490001075Q';
 
 
