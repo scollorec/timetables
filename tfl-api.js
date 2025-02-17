@@ -78,7 +78,7 @@ async function updateTimetable() {
 }
 
 // Update the timetable every 30 seconds
-setInterval(updateTimetable, 30000);
+setInterval(updateTimetable, 300000);
 
 // Initial update
 updateTimetable();
