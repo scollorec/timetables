@@ -6,15 +6,28 @@ const API_KEY = 'dadca3c3602d43d7abf660100d656c43';
 const STATION_ID = '940GZZLUCRI';
 
 async function fetchTimetableData() {
+    const url = `https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`;
+    console.log('Debug: API URL:', url);
+
     try {
-        const response = await fetch(`https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`);
+        const response = await fetch(url);
+        console.log('Debug: Response status:', response.status);
+        console.log('Debug: Response headers:', response.headers);
+
         const data = await response.json();
+        console.log('Debug: Response data:', JSON.stringify(data, null, 2));
+
+        if (data.length === 0) {
+            console.log('Debug: No arrivals data available');
+        }
+
         return data;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Debug: Error fetching data:', error);
         return [];
     }
 }
+
 
 function createTimetableCard(arrival) {
     const card = document.createElement('div');
