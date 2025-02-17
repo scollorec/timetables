@@ -8,7 +8,7 @@ const STATION_ID = '490001075Q';
 
 
 async function fetchTimetableData() {
-    const url = `https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`;
+    const url = `https://cors-anywhere.herokuapp.com/https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`;
     console.log('Debug: API URL:', url);
 
     try {
