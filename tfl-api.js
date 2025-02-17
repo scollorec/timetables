@@ -7,7 +7,7 @@ const STATION_ID = '940GZZLUCRI';
 
 async function fetchTimetableData() {
     try {
-        const response = await fetch(`https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_id=${APP_ID}&app_key=${API_KEY}`);
+        const response = await fetch(`https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`);
         const data = await response.json();
         return data;
     } catch (error) {
