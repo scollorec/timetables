@@ -1,6 +1,6 @@
 // Replace these with your actual TfL API credentials
-const APP_ID = 'YOUR_APP_ID';
-const API_KEY = 'YOUR_API_KEY';
+//const APP_ID = 'YOUR_APP_ID';
+const API_KEY = 'dadca3c3602d43d7abf660100d656c43';
 
 // Cricklewood station NAPTAN code
 const STATION_ID = '940GZZLUCRI';
