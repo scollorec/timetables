@@ -131,4 +131,4 @@ function updateTiles() {
 updateTiles();
 
 // Update tiles every 30 seconds
-setInterval(updateTiles, 30000);
+setInterval(updateTiles, 60000);
