@@ -12,7 +12,7 @@ function updateTiles() {
         .then(response => response.json())
         .then(data => {
             if (!document.querySelector('.filter-container')) {
-                createLineNameCheckboxes(data);
+                createFilterCheckboxes(data);
             }
             
             // Sort the data by expected arrival time
@@ -36,14 +36,22 @@ function updateTiles() {
 
 
 function filterTiles() {
-    const selectedLines = Array.from(document.querySelectorAll('.filter-container input:checked')).map(cb => cb.value);
+    const selectedLines = Array.from(document.querySelectorAll('.line-filter input:checked')).map(cb => cb.value);
+    const selectedDestinations = Array.from(document.querySelectorAll('.destination-filter input:checked')).map(cb => cb.value);
+    
     const tiles = document.querySelectorAll('.option-card');
     
     tiles.forEach(tile => {
         const lineName = tile.querySelector('.option-title').textContent.split(' to ')[0];
-        tile.style.display = selectedLines.includes(lineName) ? 'flex' : 'none';
+        const destination = tile.querySelector('.option-title').textContent.split(' to ')[1];
+        
+        const lineMatch = selectedLines.includes(lineName);
+        const destinationMatch = selectedDestinations.includes(destination);
+        
+        tile.style.display = (lineMatch && destinationMatch) ? 'flex' : 'none';
     });
 }
+
 
 
 
@@ -72,28 +80,49 @@ function createTileElement(arrival) {
     return tile;
 }
 
-function createLineNameCheckboxes(data) {
+function createFilterCheckboxes(data) {
     const lineNames = [...new Set(data.map(item => item.lineName))];
+    const destinations = [...new Set(data.map(item => item.destinationName))];
+    
     const filterContainer = document.createElement('div');
     filterContainer.className = 'filter-container';
     
-    lineNames.forEach(lineName => {
+    // Create line name checkboxes
+    const lineNameContainer = createCheckboxGroup(lineNames, 'line');
+    lineNameContainer.querySelector('h3').textContent = 'Line Names';
+    filterContainer.appendChild(lineNameContainer);
+    
+    // Create destination checkboxes
+    const destinationContainer = createCheckboxGroup(destinations, 'destination');
+    destinationContainer.querySelector('h3').textContent = 'Destinations';
+    filterContainer.appendChild(destinationContainer);
+    
+    document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+}
+
+function createCheckboxGroup(items, type) {
+    const container = document.createElement('div');
+    container.className = `${type}-filter`;
+    const title = document.createElement('h3');
+    container.appendChild(title);
+    
+    items.forEach(item => {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.id = lineName;
-        checkbox.value = lineName;
+        checkbox.id = `${type}-${item}`;
+        checkbox.value = item;
         checkbox.checked = true;
         checkbox.addEventListener('change', filterTiles);
         
         const label = document.createElement('label');
-        label.htmlFor = lineName;
-        label.textContent = lineName;
+        label.htmlFor = `${type}-${item}`;
+        label.textContent = item;
         
-        filterContainer.appendChild(checkbox);
-        filterContainer.appendChild(label);
+        container.appendChild(checkbox);
+        container.appendChild(label);
     });
     
-    document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+    return container;
 }
 
 
