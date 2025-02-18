@@ -48,5 +48,11 @@ function createTileElement(arrival) {
     return tile;
 }
 
+// Update tiles every 30 seconds
+setInterval(updateTiles, 20000);
+
+// Initial update
+updateTiles();
+
 
 document.addEventListener('DOMContentLoaded', updatePageTitle);
