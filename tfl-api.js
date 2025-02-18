@@ -48,6 +48,20 @@ function createTileElement(arrival) {
     return tile;
 }
 
+async function updatePageTitle() {
+    const url = `https://api.tfl.gov.uk/StopPoint/${STATION_ID}?app_key=${API_KEY}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.commonName) {
+            document.title = `${data.commonName} Station Timetable`;
+            document.querySelector('.logo').textContent = data.commonName;
+        }
+    } catch (error) {
+        console.error('Error fetching station name:', error);
+    }
+}
+
 // Update tiles every 30 seconds
 setInterval(updateTiles, 20000);
 
