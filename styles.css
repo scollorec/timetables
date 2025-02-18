@@ -70,3 +70,37 @@ header {
     background-color: #EEEEEE;
     margin: 8px 0;
 }
+
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-group {
+  flex: 1 1 200px;
+}
+
+.filter-title {
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.filter-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.filter-option label {
+  display: flex;
+  align-items: center;
+}
+
+.filter-option input[type="checkbox"] {
+  margin-right: 0.25rem;
+}
+
