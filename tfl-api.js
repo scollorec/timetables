@@ -18,9 +18,16 @@ function updateTiles() {
             
             // Add new tiles to the top of the container
             newTiles.forEach(tile => container.insertBefore(tile, container.firstChild));
+            
+            // Remove the same number of tiles from the bottom
+            const tilesToRemove = container.children.length - newTiles.length;
+            for (let i = 0; i < tilesToRemove; i++) {
+                container.removeChild(container.lastChild);
+            }
         })
         .catch(error => console.error('Error fetching arrivals:', error));
 }
+
 
 
 function createTileElement(arrival) {
