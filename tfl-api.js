@@ -81,23 +81,55 @@ function createTileElement(arrival) {
 }
 
 function createFilterCheckboxes(data) {
-    const lineNames = [...new Set(data.map(item => item.lineName))];
-    const destinations = [...new Set(data.map(item => item.destinationName))];
+  const lineNames = [...new Set(data.map(item => item.lineName))];
+  const destinations = [...new Set(data.map(item => item.destinationName))];
+  
+  const filterContainer = document.createElement('div');
+  filterContainer.className = 'filter-container';
+  
+  createFilterGroup(filterContainer, 'Line Names', lineNames);
+  createFilterGroup(filterContainer, 'Destinations', destinations);
+  
+  document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+}
+
+function createFilterGroup(container, title, items) {
+  const group = document.createElement('div');
+  group.className = 'filter-group';
+  
+  const titleElement = document.createElement('div');
+  titleElement.className = 'filter-title';
+  titleElement.textContent = title;
+  titleElement.addEventListener('click', () => {
+    optionsContainer.style.display = optionsContainer.style.display === 'none' ? 'grid' : 'none';
+  });
+  
+  const optionsContainer = document.createElement('div');
+  optionsContainer.className = 'filter-options';
+  
+  items.forEach(item => {
+    const option = document.createElement('div');
+    option.className = 'filter-option';
     
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'filter-container';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `${title}-${item}`;
+    checkbox.value = item;
+    checkbox.checked = true;
+    checkbox.addEventListener('change', filterTiles);
     
-    // Create line name checkboxes
-    const lineNameContainer = createCheckboxGroup(lineNames, 'line');
-    lineNameContainer.querySelector('h3').textContent = 'Line Names';
-    filterContainer.appendChild(lineNameContainer);
+    const label = document.createElement('label');
+    label.htmlFor = `${title}-${item}`;
+    label.textContent = item;
     
-    // Create destination checkboxes
-    const destinationContainer = createCheckboxGroup(destinations, 'destination');
-    destinationContainer.querySelector('h3').textContent = 'Destinations';
-    filterContainer.appendChild(destinationContainer);
-    
-    document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+    option.appendChild(checkbox);
+    option.appendChild(label);
+    optionsContainer.appendChild(option);
+  });
+  
+  group.appendChild(titleElement);
+  group.appendChild(optionsContainer);
+  container.appendChild(group);
 }
 
 function createCheckboxGroup(items, type) {
