@@ -1,5 +1,5 @@
-const STATION_ID = '940GZZLUCRI'; // Replace with the correct station ID
-const API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
+const STATION_ID = '940GZZLUWIG'; // Replace with the correct station ID
+const API_KEY = 'dadca3c3602d43d7abf660100d656c43'; // Replace with your actual API key
 
 function createFilterCheckboxes(data) {
   const lineNames = [...new Set(data.map(item => item.lineName))];
