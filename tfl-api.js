@@ -11,21 +11,32 @@ function updateTiles() {
     fetch(`https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`)
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById('timetable-container');
+            if (!document.querySelector('.filter-container')) {
+                createLineNameCheckboxes(data);
+            }
             
-            // Create new tile elements
+            const container = document.getElementById('timetable-container');
             const newTiles = data.map(arrival => createTileElement(arrival));
             
-            // Add new tiles to the top of the container
             newTiles.forEach(tile => container.insertBefore(tile, container.firstChild));
             
-            // Remove the same number of tiles from the bottom
             const tilesToRemove = container.children.length - newTiles.length;
             for (let i = 0; i < tilesToRemove; i++) {
                 container.removeChild(container.lastChild);
             }
+            
+            filterTiles();
         })
         .catch(error => console.error('Error fetching arrivals:', error));
+}
+function filterTiles() {
+    const selectedLines = Array.from(document.querySelectorAll('.filter-container input:checked')).map(cb => cb.value);
+    const tiles = document.querySelectorAll('.option-card');
+    
+    tiles.forEach(tile => {
+        const lineName = tile.querySelector('.option-title').textContent.split(' to ')[0];
+        tile.style.display = selectedLines.includes(lineName) ? 'flex' : 'none';
+    });
 }
 
 
@@ -54,6 +65,31 @@ function createTileElement(arrival) {
     
     return tile;
 }
+
+function createLineNameCheckboxes(data) {
+    const lineNames = [...new Set(data.map(item => item.lineName))];
+    const filterContainer = document.createElement('div');
+    filterContainer.className = 'filter-container';
+    
+    lineNames.forEach(lineName => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = lineName;
+        checkbox.value = lineName;
+        checkbox.checked = true;
+        checkbox.addEventListener('change', filterTiles);
+        
+        const label = document.createElement('label');
+        label.htmlFor = lineName;
+        label.textContent = lineName;
+        
+        filterContainer.appendChild(checkbox);
+        filterContainer.appendChild(label);
+    });
+    
+    document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+}
+
 
 async function updatePageTitle() {
     const url = `https://api.tfl.gov.uk/StopPoint/${STATION_ID}?app_key=${API_KEY}`;
