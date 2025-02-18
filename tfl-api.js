@@ -82,6 +82,9 @@ function filterTiles() {
     const selectedLines = Array.from(document.querySelectorAll('.filter-options input[id^="Line Names-"]:checked')).map(cb => cb.value);
     const selectedDestinations = Array.from(document.querySelectorAll('.filter-options input[id^="Destinations-"]:checked')).map(cb => cb.value);
     
+    console.log('Selected Lines:', selectedLines);
+    console.log('Selected Destinations:', selectedDestinations);
+    
     const tiles = document.querySelectorAll('.option-card');
     
     tiles.forEach(tile => {
@@ -90,9 +93,12 @@ function filterTiles() {
         const lineMatch = selectedLines.includes(lineName);
         const destinationMatch = selectedDestinations.includes(destination);
         
+        console.log(`Tile: ${lineName} to ${destination}, Line Match: ${lineMatch}, Destination Match: ${destinationMatch}`);
+        
         tile.style.display = (lineMatch && destinationMatch) ? 'flex' : 'none';
     });
 }
+
 
 function updateTiles() {
     fetch(`https://api.tfl.gov.uk/StopPoint/${STATION_ID}/Arrivals?app_key=${API_KEY}`)
