@@ -59,11 +59,7 @@ function createTileElement(arrival) {
     
     const backgroundColor = getColorForDestination(arrival.destinationName);
     tile.style.backgroundColor = backgroundColor;
-    
-    // Determine text color based on background brightness
-    const brightness = (parseInt(backgroundColor.slice(-4, -2)) / 100) * 255;
-    const textColor = brightness > 128 ? 'black' : 'white';
-    tile.style.color = textColor;
+    tile.style.color = 'white';  // Use white text for all tiles
 
     const arrivalTime = new Date(arrival.expectedArrival);
     const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
@@ -71,7 +67,7 @@ function createTileElement(arrival) {
     tile.innerHTML = `
         <div class="option-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 15.5C4 17.985 6.015 20 8.5 20L6 22.5V23H18V22.5L15.5 20C17.985 20 20 17.985 20 15.5V5C20 2.515 17.985 1 15.5 1H8.5C6.015 1 4 2.515 4 5V15.5ZM6 15.5V5C6 3.62 7.12 2.5 8.5 2.5H15.5C16.88 2.5 18 3.62 18 5V15.5C18 16.88 16.88 18 15.5 18H8.5C7.12 18 6 16.88 6 15.5ZM8 14.5H16V6.5H8V14.5Z" fill="${textColor}"/>
+                <path d="M4 15.5C4 17.985 6.015 20 8.5 20L6 22.5V23H18V22.5L15.5 20C17.985 20 20 17.985 20 15.5V5C20 2.515 17.985 1 15.5 1H8.5C6.015 1 4 2.515 4 5V15.5ZM6 15.5V5C6 3.62 7.12 2.5 8.5 2.5H15.5C16.88 2.5 18 3.62 18 5V15.5C18 16.88 16.88 18 15.5 18H8.5C7.12 18 6 16.88 6 15.5ZM8 14.5H16V6.5H8V14.5Z" fill="white"/>
             </svg>
         </div>
         <div class="option-details">
@@ -153,18 +149,22 @@ async function updatePageTitle() {
     }
 }
 
+const destinationColors = [
+    'hsl(210, 50%, 30%)',  // Muted Blue
+    'hsl(0, 50%, 30%)',    // Muted Red
+    'hsl(60, 50%, 30%)',   // Muted Yellow
+    'hsl(120, 50%, 30%)',  // Muted Green
+    'hsl(270, 50%, 30%)',  // Muted Purple
+    'hsl(240, 50%, 30%)',  // Muted Indigo
+    'hsl(30, 50%, 30%)'    // Muted Orange
+];
+
 function getColorForDestination(destination) {
-    // Simple hash function to generate a number from a string
-    const hash = destination.split('').reduce((acc, char) => {
-        return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
+    const index = destination.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + acc;
+    }, 0) % destinationColors.length;
     
-    // Generate a shade of blue based on the hash
-    const hue = 210; // Blue hue
-    const saturation = 70 + (hash % 30); // 70-100%
-    const lightness = 40 + (hash % 40); // 40-80%
-    
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    return destinationColors[index];
 }
 
 
