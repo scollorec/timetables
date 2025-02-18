@@ -57,13 +57,21 @@ function createTileElement(arrival) {
     const tile = document.createElement('div');
     tile.className = 'option-card';
     
+    const backgroundColor = getColorForDestination(arrival.destinationName);
+    tile.style.backgroundColor = backgroundColor;
+    
+    // Determine text color based on background brightness
+    const brightness = (parseInt(backgroundColor.slice(-4, -2)) / 100) * 255;
+    const textColor = brightness > 128 ? 'black' : 'white';
+    tile.style.color = textColor;
+
     const arrivalTime = new Date(arrival.expectedArrival);
     const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
 
     tile.innerHTML = `
         <div class="option-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 15.5C4 17.985 6.015 20 8.5 20L6 22.5V23H18V22.5L15.5 20C17.985 20 20 17.985 20 15.5V5C20 2.515 17.985 1 15.5 1H8.5C6.015 1 4 2.515 4 5V15.5ZM6 15.5V5C6 3.62 7.12 2.5 8.5 2.5H15.5C16.88 2.5 18 3.62 18 5V15.5C18 16.88 16.88 18 15.5 18H8.5C7.12 18 6 16.88 6 15.5ZM8 14.5H16V6.5H8V14.5Z" fill="black"/>
+                <path d="M4 15.5C4 17.985 6.015 20 8.5 20L6 22.5V23H18V22.5L15.5 20C17.985 20 20 17.985 20 15.5V5C20 2.515 17.985 1 15.5 1H8.5C6.015 1 4 2.515 4 5V15.5ZM6 15.5V5C6 3.62 7.12 2.5 8.5 2.5H15.5C16.88 2.5 18 3.62 18 5V15.5C18 16.88 16.88 18 15.5 18H8.5C7.12 18 6 16.88 6 15.5ZM8 14.5H16V6.5H8V14.5Z" fill="${textColor}"/>
             </svg>
         </div>
         <div class="option-details">
@@ -77,6 +85,7 @@ function createTileElement(arrival) {
     
     return tile;
 }
+
 
 function filterTiles() {
     const selectedLines = Array.from(document.querySelectorAll('.filter-options input[id^="Line Names-"]:checked')).map(cb => cb.value);
@@ -143,6 +152,21 @@ async function updatePageTitle() {
         console.error('Error fetching station name:', error);
     }
 }
+
+function getColorForDestination(destination) {
+    // Simple hash function to generate a number from a string
+    const hash = destination.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+    
+    // Generate a shade of blue based on the hash
+    const hue = 210; // Blue hue
+    const saturation = 70 + (hash % 30); // 70-100%
+    const lightness = 40 + (hash % 40); // 40-80%
+    
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
 
 // Initial update
 updateTiles();
