@@ -12,15 +12,16 @@ function updateTiles() {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('timetable-container');
-            container.innerHTML = ''; // Clear existing tiles
             
-            data.forEach(arrival => {
-                const tile = createTileElement(arrival);
-                container.appendChild(tile);
-            });
+            // Create new tile elements
+            const newTiles = data.map(arrival => createTileElement(arrival));
+            
+            // Add new tiles to the top of the container
+            newTiles.forEach(tile => container.insertBefore(tile, container.firstChild));
         })
         .catch(error => console.error('Error fetching arrivals:', error));
 }
+
 
 function createTileElement(arrival) {
     const tile = document.createElement('div');
