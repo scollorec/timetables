@@ -30,8 +30,8 @@ header {
 .option-card {
     background-color: #FFFFFF;
     border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 6px;
+    margin-bottom: 6px;
     color: #000000;
     display: flex;
     align-items: center;
