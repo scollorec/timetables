@@ -15,20 +15,26 @@ function updateTiles() {
                 createLineNameCheckboxes(data);
             }
             
+            // Sort the data by expected arrival time
+            data.sort((a, b) => new Date(a.expectedArrival) - new Date(b.expectedArrival));
+            
             const container = document.getElementById('timetable-container');
-            const newTiles = data.map(arrival => createTileElement(arrival));
             
-            newTiles.forEach(tile => container.insertBefore(tile, container.firstChild));
+            // Clear existing tiles
+            container.innerHTML = '';
             
-            const tilesToRemove = container.children.length - newTiles.length;
-            for (let i = 0; i < tilesToRemove; i++) {
-                container.removeChild(container.lastChild);
-            }
+            // Create and add new tiles in sorted order
+            data.forEach(arrival => {
+                const tile = createTileElement(arrival);
+                container.appendChild(tile);
+            });
             
             filterTiles();
         })
         .catch(error => console.error('Error fetching arrivals:', error));
 }
+
+
 function filterTiles() {
     const selectedLines = Array.from(document.querySelectorAll('.filter-container input:checked')).map(cb => cb.value);
     const tiles = document.querySelectorAll('.option-card');
