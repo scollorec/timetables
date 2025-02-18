@@ -36,7 +36,7 @@ header {
     display: flex;
     align-items: center;
     /* Reduce vertical height by 20% */
-    height: 80%;
+    height: 60%;
 }
 
 .option-icon {
