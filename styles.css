@@ -30,7 +30,7 @@ header {
 .option-card {
     background-color: #EFEFF4; /* Example background color */
     border-radius: 8px;
-    padding: 16px;
+    padding: 12px;
     margin-bottom: 16px;
     color: white; /* Default text color */
 }
