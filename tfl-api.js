@@ -65,9 +65,7 @@ function createTileElement(arrival) {
     const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
 
     tile.innerHTML = `
-        <div class="option-icon">
 
-        </div>
         <div class="option-details">
             <div class="option-title">${arrival.lineName} to ${cleanTitle(arrival.destinationName)}</div>
             <div class="option-subtitle">Arriving in ${minutesToArrival} minutes</div>
