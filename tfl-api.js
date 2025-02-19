@@ -2,16 +2,18 @@ const STATION_ID = '940GZZLUWIG'; // Replace with the correct station ID
 const API_KEY = 'dadca3c3602d43d7abf660100d656c43'; // Replace with your actual API key
 
 function createFilterCheckboxes(data) {
-  const lineNames = [...new Set(data.map(item => item.lineName))];
-  const destinations = [...new Set(data.map(item => item.destinationName))];
+
+// const lineNames = [...new Set(data.map(item => item.lineName))];
+// const destinations = [...new Set(data.map(item => item.destinationName))];
   
-  const filterContainer = document.createElement('div');
-  filterContainer.className = 'filter-container';
+  // const filterContainer = document.createElement('div');
+  // filterContainer.className = 'filter-container';
   
-  createFilterGroup(filterContainer, 'Line Names', lineNames);
-  createFilterGroup(filterContainer, 'Destinations', destinations);
+  // createFilterGroup(filterContainer, 'Line Names', lineNames);
+  // createFilterGroup(filterContainer, 'Destinations', destinations);
   
-  document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+  // document.body.insertBefore(filterContainer, document.getElementById('timetable-container'));
+
 }
 
 function createFilterGroup(container, title, items) {
