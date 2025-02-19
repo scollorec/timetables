@@ -28,15 +28,11 @@ header {
 }
 
 .option-card {
-    background-color: #FFFFFF;
+    background-color: #EFEFF4; /* Example background color */
     border-radius: 8px;
-    padding: 6px;
-    margin-bottom: 6px;
-    color: #000000;
-    display: flex;
-    align-items: center;
-    /* Reduce vertical height by 20% */
-    height: 60%;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: white; /* Default text color */
 }
 
 .option-icon {
@@ -55,15 +51,15 @@ header {
 }
 
 .option-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 4px;
-    color: #06C167;
+    color: black; /* Set the title color to black */
 }
 
 .option-subtitle {
     font-size: 14px;
-    color: #666666;
+    color: #666666; /* Subtitle color */
 }
 
 .option-divider {
