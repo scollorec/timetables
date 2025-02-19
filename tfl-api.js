@@ -69,7 +69,7 @@ function createTileElement(arrival) {
 
         </div>
         <div class="option-details">
-            <div class="option-title">${arrival.lineName} to ${arrival.destinationName}</div>
+            <div class="option-title">${arrival.lineName} to ${cleanTitle(arrival.destinationName)}</div>
             <div class="option-subtitle">Arriving in ${minutesToArrival} minutes</div>
             <div class="option-divider"></div>
             <div class="option-subtitle">Platform: ${arrival.platformName || 'N/A'}</div>
@@ -159,6 +159,14 @@ function getColorForDestination(destination) {
     return destinationColors[index];
 }
 
+// List of words to remove from the title
+const wordsToRemove = ['Station', 'Timetable', 'Live', 'Arrivals'];
+
+// Function to clean the title by removing unwanted words
+function cleanTitle(title) {
+    const regex = new RegExp(`\\b(${wordsToRemove.join('|')})\\b`, 'gi'); // Create a regex pattern for all words in the list
+    return title.replace(regex, '').replace(/\s+/g, ' ').trim(); // Remove extra spaces and trim
+}
 
 // Initial update
 updateTiles();
