@@ -174,4 +174,4 @@ updateTiles();
 document.addEventListener('DOMContentLoaded', updatePageTitle);
 
 // Update tiles every 30 seconds
-setInterval(updateTiles, 20000);
+setInterval(updateTiles, 60000);
