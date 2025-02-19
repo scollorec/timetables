@@ -150,13 +150,7 @@ async function updatePageTitle() {
 }
 
 const destinationColors = [
-    'hsl(210, 50%, 30%)',  // Muted Blue
-    'hsl(0, 50%, 30%)',    // Muted Red
-    'hsl(60, 50%, 30%)',   // Muted Yellow
-    'hsl(120, 50%, 30%)',  // Muted Green
-    'hsl(270, 50%, 30%)',  // Muted Purple
-    'hsl(240, 50%, 30%)',  // Muted Indigo
-    'hsl(30, 50%, 30%)'    // Muted Orange
+    'hsl(240, 2%, 96%)'
 ];
 
 function getColorForDestination(destination) {
