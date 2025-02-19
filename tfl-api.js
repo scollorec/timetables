@@ -160,7 +160,7 @@ function getColorForDestination(destination) {
 }
 
 // List of words to remove from the title
-const wordsToRemove = ['Station', 'Timetable', 'Live', 'Arrivals'];
+const wordsToRemove = ['Station', 'Underground', 'Underground', 'Underground'];
 
 // Function to clean the title by removing unwanted words
 function cleanTitle(title) {
