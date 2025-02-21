@@ -1,4 +1,4 @@
-const STATION_ID = '940GZZLUALD'; // Replace with the correct station ID
+const STATION_ID = '940GZZLUWIG'; // Replace with the correct station ID
 const API_KEY = 'dadca3c3602d43d7abf660100d656c43'; // Replace with your actual API key
 
 function createFilterCheckboxes(data) {
@@ -67,7 +67,6 @@ function createTileElement(arrival) {
     const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
 
     tile.innerHTML = `
-
         <div class="option-details">
             <div class="option-title">${arrival.lineName} to ${cleanTitle(arrival.destinationName)}</div>
             <div class="option-subtitle">Arriving in ${minutesToArrival} minutes</div>
@@ -79,7 +78,6 @@ function createTileElement(arrival) {
     
     return tile;
 }
-
 
 function filterTiles() {
     const selectedLines = Array.from(document.querySelectorAll('.filter-options input[id^="Line Names-"]:checked')).map(cb => cb.value);
