@@ -124,6 +124,8 @@ function updateTiles() {
                 const tile = createTileElement(arrival);
                 container.appendChild(tile);
             });
+
+          ontainer.appendChild(data);
             
             //filterTiles();
         })
@@ -140,7 +142,7 @@ async function updatePageTitle() {
             
             // Update the header content
             const logoElement = document.querySelector('.logo');
-            logoElement.innerHTML = `${data.commonName} <span>Station</span>`;
+            logoElement.innerHTML = `${data.commonName}`;
         }
     } catch (error) {
         console.error('Error fetching station name:', error);
