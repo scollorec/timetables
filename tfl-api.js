@@ -125,7 +125,7 @@ function updateTiles() {
                 container.appendChild(tile);
             });
 
-          ontainer.appendChild(data);
+          container.appendChild(data);
             
             //filterTiles();
         })
