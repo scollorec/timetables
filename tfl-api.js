@@ -125,7 +125,7 @@ function updateTiles() {
                 container.appendChild(tile);
             });
             
-            filterTiles();
+            //filterTiles();
         })
         .catch(error => console.error('Error fetching arrivals:', error));
 }
