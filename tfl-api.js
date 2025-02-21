@@ -125,7 +125,13 @@ function updateTiles() {
                 container.appendChild(tile);
             });
 
-          container.appendChild(data);
+          container.appendChild = `
+
+        <div class="option-details">
+            ${data} 
+        </div>
+      `;
+         
             
             //filterTiles();
         })
