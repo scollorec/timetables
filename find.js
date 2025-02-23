@@ -39,7 +39,7 @@ function addLine(line){
     tile.className = 'option-card';
     
     const backgroundColor = ['hsl(240, 2%, 96%)'];
-    tile.style.backgroundColor = backgroundColor;
+    tile.style.backgroundColor = getLineColor(line);
     tile.style.color = 'white';  // Use white text for all tiles disruptions
 
     const disruptions = line.disruptions || 'No disruption';
@@ -53,6 +53,29 @@ function addLine(line){
     `;
 
     return tile;
+}
+
+function getLineColor(line){
+    // Mapping of line names to their official colors
+    const lineColors = {
+        "Bakerloo": "#B36305",
+        "Central": "#E32017",
+        "Circle": "#FFD300",
+        "District": "#00782A",
+        "Hammersmith & City": "#F3A9BB",
+        "Jubilee": "#A0A5A9",
+        "Metropolitan": "#9B0056",
+        "Northern": "#000000",
+        "Piccadilly": "#003688",
+        "Victoria": "#0098D4",
+        "Waterloo & City": "#95CDBA",
+        "London Overground": "#EE7C0E",
+        "DLR": "#00A4A7",
+        "Elizabeth line": "#7156A5"
+    };
+
+    return line.lineColour || lineColors[line.name] || '#000000';
+    
 }
 
 // Function to handle line selection
