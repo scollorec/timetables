@@ -38,6 +38,28 @@ function displayLines(lines) {
     container.appendChild(ul);
 }
 
+function addLine(line){
+    const tile = document.createElement('div');
+    tile.className = 'option-card';
+    
+    const backgroundColor = getColorForDestination(arrival.destinationName);
+    tile.style.backgroundColor = backgroundColor;
+    tile.style.color = 'white';  // Use white text for all tiles
+
+    const arrivalTime = new Date(arrival.expectedArrival);
+    const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
+
+    tile.innerHTML = `
+        <div class="option-details">
+            <div class="option-title">${arrival.lineName} to ${cleanTitle(arrival.destinationName)}</div>
+            <div class="option-subtitle">Arriving in ${minutesToArrival} minutes</div>
+            <div class="option-divider"></div>
+            <div class="option-subtitle">Platform: ${arrival.platformName || 'N/A'}</div>
+            <div class="option-subtitle">Status: ${arrival.currentLocation}</div>
+        </div>
+    `;
+}
+
 // Function to handle line selection
 function selectLine(line) {
     console.log('Selected line:', line.name);
