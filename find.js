@@ -70,6 +70,8 @@ function getLineColor(line){
         "Victoria": "#0098D4",
         "Waterloo & City": "#95CDBA",
         "London Overground": "#EE7C0E",
+        "Liberty Line": "#EE7C0E",
+        "Lioness Line": "#EE7C0E",
         "DLR": "#00A4A7",
         "Elizabeth line": "#7156A5"
     };
