@@ -63,6 +63,10 @@ header {
     font-size: 14px;
     color: #666666; /* Subtitle color */
 }
+.option-line-subtitle {
+    font-size: 14px;
+    color: #FFFFFF; /* Subtitle color */
+}
 
 .option-divider {
     height: 1px;
