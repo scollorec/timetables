@@ -27,12 +27,7 @@ function displayLines(lines) {
     ul.className = 'line-list';
 
     lines.forEach(line => {
-        const li = document.createElement('li');
-        li.className = 'line-item';
-        li.style.color = line.lineColour || '#000';
-        li.textContent = line.name;
-        li.addEventListener('click', () => selectLine(line));
-        ul.appendChild(li);
+        addLine(line);
     });
 
     container.appendChild(ul);
@@ -42,20 +37,18 @@ function addLine(line){
     const tile = document.createElement('div');
     tile.className = 'option-card';
     
-    const backgroundColor = getColorForDestination(arrival.destinationName);
+    const backgroundColor = ['hsl(240, 2%, 96%)'];
     tile.style.backgroundColor = backgroundColor;
-    tile.style.color = 'white';  // Use white text for all tiles
+    tile.style.color = 'white';  // Use white text for all tiles disruptions
 
-    const arrivalTime = new Date(arrival.expectedArrival);
-    const minutesToArrival = Math.round((arrivalTime - new Date()) / 60000);
+    const disruptions = line.disruptions || 'No disruption';
 
     tile.innerHTML = `
         <div class="option-details">
-            <div class="option-title">${arrival.lineName} to ${cleanTitle(arrival.destinationName)}</div>
-            <div class="option-subtitle">Arriving in ${minutesToArrival} minutes</div>
+            <div class="option-title">${line.name}</div>
+            <div class="option-subtitle">Mode ${line.modeName}</div>
             <div class="option-divider"></div>
-            <div class="option-subtitle">Platform: ${arrival.platformName || 'N/A'}</div>
-            <div class="option-subtitle">Status: ${arrival.currentLocation}</div>
+            <div class="option-subtitle">Status: ${line.disruptions || 'No disruption'}</div>
         </div>
     `;
 }
