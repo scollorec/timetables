@@ -46,10 +46,7 @@ function addLine(line){
 
     tile.innerHTML = `
         <div class="option-details">
-            <div class="option-title">${line.name}</div>
-            <div class="option-subtitle">Mode ${line.modeName}</div>
-            <div class="option-divider"></div>
-            <div class="option-subtitle">Status: ${line.disruptions || 'No disruption'}</div>
+            <div class="option-title">${line.name} ${line.modeName} Status: ${line.disruptions || 'No disruption'}</div>
         </div>
     `;
 
