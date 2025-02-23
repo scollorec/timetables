@@ -72,6 +72,11 @@ function getLineColor(line){
         "London Overground": "#EE7C0E",
         "Liberty": "#EE7C0E",
         "Lioness": "#EE7C0E",
+        "Mildmay": "#EE7C0E", 
+        "Northern": "#EE7C0E",
+        "Suffragette": "#EE7C0E",
+        "Weaver": "#EE7C0E",
+        "Windrush": "#EE7C0E",
         "DLR": "#00A4A7",
         "Elizabeth line": "#7156A5"
     };
