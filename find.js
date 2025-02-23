@@ -48,7 +48,7 @@ function addLine(line){
         <div class="option-details">
             <div class="option-title">${line.name} </div>
             <div class="option-divider"></div>
-            <div class="option-subtitle">Type:${line.modeName} Status: (${line.disruptions})</div>
+            <div class="option-line-subtitle">Type:${line.modeName} Status: (${line.disruptions})</div>
         </div>
     `;
 
