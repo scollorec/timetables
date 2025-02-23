@@ -27,10 +27,11 @@ function displayLines(lines) {
     ul.className = 'line-list';
 
     lines.forEach(line => {
-        addLine(line);
+        const tile = addLine(line);
+        container.appendChild(tile);
     });
 
-    container.appendChild(ul);
+    //container.appendChild(ul);
 }
 
 function addLine(line){
@@ -51,6 +52,8 @@ function addLine(line){
             <div class="option-subtitle">Status: ${line.disruptions || 'No disruption'}</div>
         </div>
     `;
+
+    return tile;
 }
 
 // Function to handle line selection
