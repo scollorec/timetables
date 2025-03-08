@@ -1,0 +1,186 @@
+/* iOS-inspired Transport Lines CSS */
+
+/* Base styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    background-color: #f2f2f7;
+    margin: 0;
+    padding: 0;
+    color: #000000;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Header styling */
+header {
+    text-align: center;
+    padding: 16px 0;
+    margin-bottom: 16px;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+/* Line cards styling */
+.option-card {
+    margin-bottom: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.option-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.option-details {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.option-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.option-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 8px 0;
+}
+
+.option-line-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Status indicators */
+.status-normal {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: rgba(52, 199, 89, 0.2);
+    color: #34c759;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-disruption {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 149, 0, 0.2);
+    color: #ff9500;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Search bar styling */
+.search-container {
+    padding: 0 16px 16px 16px;
+    background-color: #ffffff;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+    background-color: #e4e4e8;
+    border-radius: 10px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    width: 100%;
+    outline: none;
+    color: #000000;
+}
+
+.search-bar input::placeholder {
+    color: #8e8e93;
+}
+
+/* Section headers */
+.section-header {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 24px 16px 16px 16px;
+    color: #000000;
+}
+
+/* Mode filters */
+.mode-filters {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 16px 16px 16px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mode-filter {
+    padding: 8px 16px;
+    margin-right: 8px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #8e8e93;
+    white-space: nowrap;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mode-filter.active {
+    background-color: #007aff;
+    color: #ffffff;
+    border-color: #007aff;
+}
+
+/* For dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1c1c1e;
+        color: #ffffff;
+    }
+
+    header, .search-container {
+        background-color: #2c2c2e;
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+        color: #ffffff;
+    }
+
+    .search-bar {
+        background-color: #3a3a3c;
+    }
+
+    .search-bar input {
+        color: #ffffff;
+    }
+
+    .section-header {
+        color: #ffffff;
+    }
+
+    .mode-filter {
+        background-color: #2c2c2e;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
