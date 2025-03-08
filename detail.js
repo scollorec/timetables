@@ -268,7 +268,7 @@ function findUpdatedArrival(arrivals, currentArrival) {
     if (potentialMatches.length === 0) return null;// Global variables
     let detailRefreshTimer = null;
     let countdownInterval = null;
-    let currentArrival = null;
+    //let currentArrival = null;
     let currentStation = null;
 
 // Function to show detailed view of an arrival with Apple Watch style
