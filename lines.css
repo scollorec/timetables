@@ -184,3 +184,39 @@ header {
         border-color: rgba(255, 255, 255, 0.1);
     }
 }
+
+/* Overground line styling with horizontal parallel lines */
+.overground-line {
+    position: relative;
+    background-color: white !important;
+    color: #000000 !important;
+    border: 1px solid var(--line-color, #EE7C0E);
+}
+
+.overground-line::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+            0deg,
+            var(--line-color, #EE7C0E) 0,
+            var(--line-color, #EE7C0E) 3px,
+            transparent 3px,
+            transparent 9px
+    );
+    background-size: 100% 12px;
+    background-repeat: repeat-y;
+    opacity: 1;
+    z-index: 0;
+}
+
+.overground-line .option-details {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+

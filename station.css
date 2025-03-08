@@ -60,6 +60,7 @@
     display: flex;
     align-items: center;
     transition: background-color 0.2s;
+    position: relative;
 }
 
 .station-item:last-child {
@@ -122,6 +123,42 @@
     padding: 2px 4px;
 }
 
+/* Favorite station styling */
+.favorite-icon {
+    font-size: 20px;
+    color: rgba(200, 200, 200, 0.5);
+    cursor: pointer;
+    margin-right: 12px;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.favorite-icon.active {
+    color: #FFD700; /* Gold color for active stars */
+}
+
+.favorite-icon:hover {
+    transform: scale(1.2);
+}
+
+.favorite-station {
+    background-color: rgba(255, 215, 0, 0.1); /* Subtle gold background */
+    border-left: 3px solid #FFD700; /* Gold border */
+}
+
+.station-name {
+    margin-left: 10px;
+}
+
+/* Section headers for favorites */
+.section-header {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 20px;
+    background-color: #f2f2f7;
+    color: #8e8e93;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 /* For dark mode support */
 @media (prefers-color-scheme: dark) {
     .station-container {
@@ -151,5 +188,15 @@
 
     .search-bar input {
         color: #ffffff;
+    }
+
+    .section-header {
+        background-color: #1c1c1e;
+        color: #8e8e93;
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .favorite-station {
+        background-color: rgba(255, 215, 0, 0.05);
     }
 }
