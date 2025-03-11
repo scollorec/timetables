@@ -246,5 +246,5 @@ function displayArrivals(arrivals, station) {
             const now = new Date();
             lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
         });
-    }, 30000);
+    }, 60000);
 }
