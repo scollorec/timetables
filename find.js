@@ -25,6 +25,43 @@ function displayLines(lines) {
     // Get favorites
     const favorites = getFavorites();
 
+    // Create filter buttons
+    const filtersContainer = document.createElement('div');
+    filtersContainer.className = 'mode-filters';
+
+    // Get saved filter preferences from localStorage
+    const activeFilters = getActiveFilters();
+
+    // Create filter buttons for different modes
+    const modes = [
+        { id: 'tube', name: 'Tube' },
+        { id: 'overground', name: 'Overground' },
+        { id: 'dlr', name: 'DLR' },
+        { id: 'elizabeth-line', name: 'Elizabeth Line' }
+    ];
+
+    modes.forEach(mode => {
+        const filterButton = document.createElement('button');
+        filterButton.className = 'mode-filter';
+        filterButton.dataset.mode = mode.id;
+        filterButton.textContent = mode.name;
+
+        // Set active state based on saved preferences
+        if (activeFilters.includes(mode.id)) {
+            filterButton.classList.add('active');
+        }
+
+        filterButton.addEventListener('click', function() {
+            this.classList.toggle('active');
+            updateActiveFilters();
+            filterLines(lines);
+        });
+
+        filtersContainer.appendChild(filterButton);
+    });
+
+    container.appendChild(filtersContainer);
+
     // Create a section for favorite stations if there are any
     if (favorites.length > 0) {
         const favoritesHeader = document.createElement('div');
@@ -42,7 +79,7 @@ function displayLines(lines) {
             fetch(`https://api.tfl.gov.uk/StopPoint/${stationId}`)
                 .then(response => response.json())
                 .then(station => {
-                    const stationTile = createStationTile(station);
+                    const stationTile = createStationTile(station, favoritesList, favoritesHeader);
                     favoritesList.appendChild(stationTile);
                 })
                 .catch(error => {
@@ -57,20 +94,39 @@ function displayLines(lines) {
     const linesHeader = document.createElement('div');
     linesHeader.className = 'section-header';
     linesHeader.textContent = 'Lines';
+    linesHeader.id = 'lines-header'; // Add ID for easy reference
     container.appendChild(linesHeader);
 
-    // Display lines
-    lines.forEach(line => {
-        const tile = addLine(line);
-        // Add click event listener to each tile
-        tile.addEventListener('click', () => selectLine(line));
-        container.appendChild(tile);
-    });
+    // Create a container for line tiles
+    const linesContainer = document.createElement('div');
+    linesContainer.id = 'lines-container';
+    container.appendChild(linesContainer);
+
+    // Filter and display lines based on active filters
+    filterLines(lines);
 
     // Function to create a station tile
-    function createStationTile(station) {
+    function createStationTile(station, favoritesList, favoritesHeader) {
         const tile = document.createElement('div');
-        tile.className = 'station-item favorite-station';
+        tile.className = 'option-card airport-style favorite-station';
+
+        // Create the status indicator (colored dot)
+        const indicator = document.createElement('div');
+        indicator.className = 'status-indicator';
+        indicator.style.backgroundColor = '#FFD700'; // Gold color for favorites
+
+        // Create the main content container
+        const content = document.createElement('div');
+        content.className = 'line-content';
+
+        // Create the station name/title
+        const title = document.createElement('h2');
+        title.className = 'line-title';
+        title.textContent = station.commonName.replace(' Underground Station', '');
+
+        // Create the right-side controls container
+        const controls = document.createElement('div');
+        controls.className = 'controls-container';
 
         // Add favorite star
         const favoriteIcon = document.createElement('span');
@@ -90,13 +146,21 @@ function displayLines(lines) {
             }
         });
 
-        // Add station name
-        const stationName = document.createElement('span');
-        stationName.className = 'station-name';
-        stationName.textContent = station.commonName.replace(' Underground Station', '');
+        // Create the options menu button
+        const options = document.createElement('button');
+        options.className = 'options-button';
+        options.textContent = '•••';
 
-        tile.appendChild(favoriteIcon);
-        tile.appendChild(stationName);
+        // Add favorite icon and options button to controls
+        controls.appendChild(favoriteIcon);
+        controls.appendChild(options);
+
+        // Append elements to build the card
+        content.appendChild(title);
+
+        tile.appendChild(indicator);
+        tile.appendChild(content);
+        tile.appendChild(controls);
 
         // Add click event to select station
         tile.addEventListener('click', () => {
@@ -105,13 +169,131 @@ function displayLines(lines) {
 
         return tile;
     }
+
+    // Function to update active filters in localStorage
+    function updateActiveFilters() {
+        const activeFilters = Array.from(document.querySelectorAll('.mode-filter.active'))
+            .map(button => button.dataset.mode);
+        localStorage.setItem('active-filters', JSON.stringify(activeFilters));
+    }
+
+    // Function to filter lines based on active filters
+    function filterLines(allLines) {
+        const activeFilters = getActiveFilters();
+        const linesContainer = document.getElementById('lines-container');
+
+        // Clear existing line cards
+        linesContainer.innerHTML = '';
+
+        // If no filters are active, show all lines
+        if (activeFilters.length === 0) {
+            displayFilteredLines(allLines);
+            return;
+        }
+
+        // Filter lines based on active filters
+        const filteredLines = allLines.filter(line => {
+            // Check if line matches any active filter
+            return activeFilters.some(filter => {
+                if (filter === 'overground') {
+                    return line.id.toLowerCase().includes('overground') ||
+                        line.name.toLowerCase().includes('overground') ||
+                        line.name.toLowerCase().includes('lioness') ||
+                        line.name.toLowerCase().includes('mildmay') ||
+                        line.name.toLowerCase().includes('windrush') ||
+                        line.name.toLowerCase().includes('weaver') ||
+                        line.name.toLowerCase().includes('suffragette') ||
+                        line.name.toLowerCase().includes('liberty');
+                } else if (filter === 'elizabeth-line') {
+                    return line.id.toLowerCase().includes('elizabeth') ||
+                        line.name.toLowerCase().includes('elizabeth');
+                } else {
+                    return line.modeName && line.modeName.toLowerCase() === filter ||
+                        line.id.toLowerCase().includes(filter);
+                }
+            });
+        });
+
+        displayFilteredLines(filteredLines);
+    }
+
+    // Function to display filtered lines
+    function displayFilteredLines(filteredLines) {
+        const linesContainer = document.getElementById('lines-container');
+
+        // Display filtered lines
+        filteredLines.forEach(line => {
+            const tile = addLine(line);
+            // Add click event listener to each tile
+            tile.addEventListener('click', () => selectLine(line));
+            linesContainer.appendChild(tile);
+        });
+    }
+}
+
+// Function to get active filters from localStorage
+function getActiveFilters() {
+    const storedFilters = localStorage.getItem('active-filters');
+    // Default to all filters active if none are stored
+    return storedFilters ? JSON.parse(storedFilters) : ['tube', 'overground', 'dlr', 'elizabeth-line'];
 }
 
 function addLine(line) {
     const tile = document.createElement('div');
-    tile.className = 'option-card';
+    tile.className = 'option-card airport-style';
 
-    // Determine if this is an Overground line
+    // Create the status indicator (colored dot)
+    const indicator = document.createElement('div');
+    indicator.className = 'status-indicator';
+
+    // Create the main content container
+    const content = document.createElement('div');
+    content.className = 'line-content';
+
+    // Create the line name/title
+    const title = document.createElement('h2');
+    title.className = 'line-title';
+    title.textContent = line.name;
+
+    // Create the right-side controls container
+    const controls = document.createElement('div');
+    controls.className = 'controls-container';
+
+    // Check if there are disruptions
+    const hasDisruption = line.disruptions && line.disruptions.length > 0;
+
+    // Add status icon based on disruption status
+    const statusIcon = document.createElement('span');
+    statusIcon.className = 'status-icon';
+
+    if (hasDisruption) {
+        statusIcon.innerHTML = '⚠️'; // Warning triangle
+        statusIcon.classList.add('warning');
+    } else {
+        statusIcon.innerHTML = '✓'; // Green check
+        statusIcon.classList.add('check');
+    }
+
+    // Create the options menu button
+    const options = document.createElement('button');
+    options.className = 'options-button';
+    options.textContent = '•••';
+
+    // Add status icon and options button to controls
+    controls.appendChild(statusIcon);
+    controls.appendChild(options);
+
+    // Determine line color for styling
+    const lineColor = getLineColor(line);
+
+    // Append elements to build the card
+    content.appendChild(title);
+
+    tile.appendChild(indicator);
+    tile.appendChild(content);
+    tile.appendChild(controls);
+
+    // Apply styling based on line type
     const isOverground = line.id.toLowerCase().includes('overground') ||
         line.name.toLowerCase().includes('overground') ||
         line.name.toLowerCase().includes('lioness') ||
@@ -121,220 +303,31 @@ function addLine(line) {
         line.name.toLowerCase().includes('suffragette') ||
         line.name.toLowerCase().includes('liberty');
 
-    // Apply different styling for Overground lines
+    // Always set the indicator color regardless of line type
+    indicator.style.backgroundColor = lineColor;
+
+    // Add the overground class if needed
     if (isOverground) {
         tile.classList.add('overground-line');
-        const lineColor = getLineColor(line);
+        // Set the border color for overground lines
         tile.style.setProperty('--line-color', lineColor);
-    } else {
-        tile.style.backgroundColor = getLineColor(line);
-        tile.style.color = 'white';
     }
-
-    let disruptionText = 'Normal status';
-    // Check if disruptions exist and have content
-    if (line.disruptions && line.disruptions.length > 0) {
-        disruptionText = line.disruptions;
-    }
-
-    tile.innerHTML = `
-    <div class="option-details">
-      <div class="option-title">${line.name}</div>
-      <div class="option-divider"></div>
-      <div class="option-line-subtitle">${disruptionText}</div>
-    </div>
-  `;
 
     return tile;
 }
 
-
-
-
-// Function to handle line selection
+// Function to select a line and fetch its stations
 function selectLine(line) {
     console.log('Selected line:', line.id);
-    currentLine = line; // Store current line globally
+    currentLine = line;
     fetchStations(line.id).then(stations => {
         displayStations(stations, line);
     });
 }
 
-// Function to fetch stations for a line
-async function fetchStations(lineId) {
-    try {
-        const response = await fetch(`https://api.tfl.gov.uk/Line/${lineId}/StopPoints`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const stations = await response.json();
-        // Filter to only include tube stations
-        return stations.filter(station =>
-            station.modes.includes('tube') ||
-            station.modes.includes('overground') ||
-            station.modes.includes('dlr') ||
-            station.modes.includes('elizabeth-line')
-        );
-    } catch (error) {
-        console.error('Error fetching stations:', error);
-        return [];
-    }
-}
-
-// Function to check if a station is favorited
-function isStationFavorite(stationId) {
-    const favorites = getFavorites();
-    return favorites.includes(stationId);
-}
-
-// Function to get all favorites from localStorage
-function getFavorites() {
-    const storedFavorites = localStorage.getItem('favorite-stations');
-    return storedFavorites ? JSON.parse(storedFavorites) : [];
-}
-
-// Function to toggle favorite status
-function toggleFavorite(stationId) {
-    const favorites = getFavorites();
-    const index = favorites.indexOf(stationId);
-
-    if (index === -1) {
-        // Add to favorites
-        favorites.push(stationId);
-    } else {
-        // Remove from favorites
-        favorites.splice(index, 1);
-    }
-
-    // Save updated favorites to localStorage
-    localStorage.setItem('favorite-stations', JSON.stringify(favorites));
-}
-
-// Function to display stations for a line
-function displayStations(stations, line) {
-    const container = document.getElementById('timetable-container');
-    container.innerHTML = ''; // Clear existing content
-
-    // Get favorites
-    const favorites = getFavorites();
-
-    // Sort stations with favorites at the top
-    stations.sort((a, b) => {
-        const aIsFavorite = favorites.includes(a.id);
-        const bIsFavorite = favorites.includes(b.id);
-
-        if (aIsFavorite && !bIsFavorite) return -1;
-        if (!aIsFavorite && bIsFavorite) return 1;
-
-        // If both are favorites or both are not, sort alphabetically
-        return a.commonName.localeCompare(b.commonName);
-    });
-
-    // Create header
-    const header = document.createElement('div');
-    header.className = 'station-header';
-
-    // Create back button
-    const backButton = document.createElement('button');
-    backButton.textContent = 'Lines';
-    backButton.className = 'back-button';
-    backButton.addEventListener('click', function() {
-        init(); // Go back to lines list
-    });
-
-    // Create title
-    const title = document.createElement('h2');
-    title.textContent = line.name;
-    title.className = 'line-title';
-    title.style.color = getLineColor(line);
-
-    header.appendChild(backButton);
-    header.appendChild(title);
-
-    // Create station container
-    const stationContainer = document.createElement('div');
-    stationContainer.className = 'station-container';
-    stationContainer.appendChild(header);
-
-    // Create a section for favorites if there are any
-    const favoritesStations = stations.filter(station => favorites.includes(station.id));
-    if (favoritesStations.length > 0) {
-        const favoritesHeader = document.createElement('div');
-        favoritesHeader.className = 'section-header';
-        favoritesHeader.textContent = 'Favorite Stations';
-        stationContainer.appendChild(favoritesHeader);
-
-        // Create list for favorites
-        const favoritesList = document.createElement('ul');
-        favoritesList.className = 'station-list';
-
-        // Add favorite stations
-        favoritesStations.forEach(station => {
-            const stationItem = createStationItem(station, true);
-            favoritesList.appendChild(stationItem);
-        });
-
-        stationContainer.appendChild(favoritesList);
-    }
-
-    // Create header for all stations
-    const allStationsHeader = document.createElement('div');
-    allStationsHeader.className = 'section-header';
-    allStationsHeader.textContent = 'All Stations';
-    stationContainer.appendChild(allStationsHeader);
-
-    // Create list for all stations
-    const stationsList = document.createElement('ul');
-    stationsList.className = 'station-list';
-
-    // Add all stations
-    stations.forEach(station => {
-        if (!favorites.includes(station.id)) {
-            const stationItem = createStationItem(station, false);
-            stationsList.appendChild(stationItem);
-        }
-    });
-
-    stationContainer.appendChild(stationsList);
-    container.appendChild(stationContainer);
-
-    // Function to create a station list item
-    function createStationItem(station, isFavorite) {
-        const stationItem = document.createElement('li');
-        stationItem.className = 'station-item' + (isFavorite ? ' favorite-station' : '');
-
-        // Add favorite star
-        const favoriteIcon = document.createElement('span');
-        favoriteIcon.className = 'favorite-icon' + (isFavorite ? ' active' : '');
-        favoriteIcon.innerHTML = '★';
-        favoriteIcon.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleFavorite(station.id);
-            // Refresh the station list to update order
-            displayStations(stations, line);
-        });
-
-        // Add station name
-        const stationName = document.createElement('span');
-        stationName.className = 'station-name';
-        stationName.textContent = station.commonName.replace(' Underground Station', '');
-
-        stationItem.appendChild(favoriteIcon);
-        stationItem.appendChild(stationName);
-
-        // Add click event to select station
-        stationItem.addEventListener('click', () => {
-            selectStation(station);
-        });
-
-        return stationItem;
-    }
-}
-
 // Function to get color for a line
 function getLineColor(line) {
     const colors = {
-        // Tube lines
         'bakerloo': '#B36305',
         'central': '#E32017',
         'circle': '#FFD300',
@@ -346,67 +339,37 @@ function getLineColor(line) {
         'piccadilly': '#003688',
         'victoria': '#0098D4',
         'waterloo-city': '#95CDBA',
+        'london-overground': '#EE7C0E',
         'dlr': '#00A4A7',
-        'elizabeth': '#6950A1',
-        'tram': '#84B817',
-
-        // New Overground lines
-        'london-overground': '#EE7C0E', // Original orange - for backward compatibility
-        'lioness': '#FFC72C', // Yellow
-        'mildmay': '#0019A8', // Blue
-        'windrush': '#DA291C', // Red
-        'weaver': '#9B0058', // Maroon
-        'suffragette': '#00843D', // Green
-        'liberty': '#6B6B6C' // Grey
+        'elizabeth': '#9364CD',
+        'tram': '#84B817'
     };
 
-    // Check if the line name or id matches any of our defined colors
-    const lineId = line.id ? line.id.toLowerCase() : '';
-    const lineName = line.name ? line.name.toLowerCase() : '';
+    // Check for specific Overground lines
+    if (line.name.toLowerCase().includes('lioness')) return '#EE7C0E';
+    if (line.name.toLowerCase().includes('mildmay')) return '#EE7C0E';
+    if (line.name.toLowerCase().includes('windrush')) return '#EE7C0E';
+    if (line.name.toLowerCase().includes('weaver')) return '#EE7C0E';
+    if (line.name.toLowerCase().includes('suffragette')) return '#EE7C0E';
+    if (line.name.toLowerCase().includes('liberty')) return '#EE7C0E';
 
-    if (colors[lineId]) return colors[lineId];
+    // For standard lines, look up by ID
+    for (const [key, color] of Object.entries(colors)) {
+        if (line.id.toLowerCase().includes(key)) {
+            return color;
+        }
+    }
 
-    // Check for partial matches in the name
-    if (lineName.includes('bakerloo')) return colors['bakerloo'];
-    if (lineName.includes('central')) return colors['central'];
-    if (lineName.includes('circle')) return colors['circle'];
-    if (lineName.includes('district')) return colors['district'];
-    if (lineName.includes('hammersmith') || lineName.includes('city')) return colors['hammersmith-city'];
-    if (lineName.includes('jubilee')) return colors['jubilee'];
-    if (lineName.includes('metropolitan')) return colors['metropolitan'];
-    if (lineName.includes('northern')) return colors['northern'];
-    if (lineName.includes('piccadilly')) return colors['piccadilly'];
-    if (lineName.includes('victoria')) return colors['victoria'];
-    if (lineName.includes('waterloo')) return colors['waterloo-city'];
-    if (lineName.includes('dlr')) return colors['dlr'];
-    if (lineName.includes('elizabeth')) return colors['elizabeth'];
-    if (lineName.includes('tram')) return colors['tram'];
-
-    // Check for partial matches for the new Overground lines
-    if (lineName.includes('lioness')) return colors['lioness'];
-    if (lineName.includes('mildmay')) return colors['mildmay'];
-    if (lineName.includes('windrush')) return colors['windrush'];
-    if (lineName.includes('weaver')) return colors['weaver'];
-    if (lineName.includes('suffragette')) return colors['suffragette'];
-    if (lineName.includes('liberty')) return colors['liberty'];
-
-    // Default to original Overground orange for any remaining Overground references
-    if (lineName.includes('overground')) return colors['london-overground'];
-
-    // Default color if no match is found
-    return '#007AC9';
+    // Default color if no match found
+    return '#7B7B7B';
 }
 
-
-
-// Global variable to store the current line
+// Initialize the app
 let currentLine = null;
 
-// Initialize the app
-function init() {
-    fetchLines().then(lines => {
-        displayLines(lines);
-    });
+async function init() {
+    const lines = await fetchLines();
+    displayLines(lines);
 }
 
 // Start the app when the page loads

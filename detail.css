@@ -136,3 +136,242 @@
 .countdown-ring circle:nth-child(2) {
     animation: pulse 2s infinite;
 }
+
+/* Apple Watch-inspired Detail View Styles */
+.watch-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background-color: #000000;
+    max-width: 360px;
+    margin: 0 auto;
+    border-radius: 44px;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+/* Header with back button */
+.watch-header {
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.watch-back-button {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007aff;
+    font-size: 16px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Main watch face */
+.watch-face {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #000000;
+}
+
+/* Countdown circle */
+.countdown-circle {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    border-radius: 50%;
+}
+
+.gauge-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.gauge-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    clip: rect(0, 120px, 240px, 0);
+    transform-origin: center;
+}
+
+.gauge-segment-yellow {
+    border: 6px solid #FFD700;
+    clip-path: polygon(50% 50%, 50% 0, 75% 0, 75% 50%);
+}
+
+.gauge-segment-green {
+    border: 6px solid #34C759;
+    clip-path: polygon(50% 50%, 75% 0, 100% 25%, 75% 50%);
+}
+
+.gauge-segment-white {
+    border: 6px solid #FFFFFF;
+    clip-path: polygon(50% 50%, 100% 25%, 100% 75%, 50% 100%);
+}
+
+.gauge-ticks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.gauge-tick {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background-color: #FFFFFF;
+    transform-origin: center 120px;
+}
+
+.gauge-tick-major {
+    height: 15px;
+    width: 3px;
+}
+
+.gauge-numbers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+.gauge-number {
+    position: absolute;
+    transform-origin: center;
+}
+
+.countdown-display {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.countdown-time {
+    font-size: 48px;
+    font-weight: 300;
+    color: white;
+    line-height: 1;
+}
+
+.countdown-unit {
+    font-size: 18px;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+.countdown-label {
+    font-size: 18px;
+    opacity: 0.9;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Arrival information */
+.watch-info {
+    width: 100%;
+    text-align: center;
+    padding: 0 20px 20px 20px;
+}
+
+.watch-line {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.watch-destination {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 12px;
+}
+
+.watch-platform {
+    font-size: 16px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.watch-expected {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 12px;
+}
+
+.watch-last-updated {
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 16px;
+}
+
+/* Animation for the hand */
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+.countdown-hand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 4px;
+    background-color: #FFFFFF;
+    transform-origin: left center;
+    transform: rotate(0deg);
+    z-index: 2;
+    border-radius: 2px;
+}
+
+.countdown-hand::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 20px;
+    height: 20px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    z-index: 3;
+}
+
+.date-display {
+    position: absolute;
+    bottom: 60px;
+    right: 30px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.time-display {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
