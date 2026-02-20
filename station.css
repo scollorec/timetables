@@ -1,7 +1,112 @@
 /* iOS-inspired Station Display CSS */
 
+.platform-header {
+    background-color: #1c1c1e;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #8e8e93;
+}
+
+.line-title {
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+    color: #000000;
+}
+
+.line-filter {
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.line-filter.active {
+    opacity: 1;
+}
+
+.arrival-line {
+    font-weight: 600;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 12px;
+    min-width: 80px;
+}
+
+.line-filters {
+    display: flex;
+    overflow-x: auto;
+    padding: 12px 16px;
+    gap: 8px;
+    background-color: #1c1c1e;
+    -webkit-overflow-scrolling: touch;
+}
+
+.last-updated {
+    font-size: 12px;
+    color: #8e8e93;
+    text-align: center;
+    margin-top: 4px;
+}
+
+.arrival-line_ {
+    font-weight: 600;
+    margin-right: 12px;
+    min-width: 80px;
+}
+
+.station-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Header styling */
+.station-header {
+    background-color: #ffffff;
+    padding: 16px 20px;
+
+    position: relative;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.arrival-destination {
+    color: #8e8e93;
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.arrival-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.arrival-time {
+    font-weight: 600;
+    font-size: 16px;
+    color: #007aff;
+}
+
+.arrival-expected {
+    font-size: 12px;
+    color: #8e8e93;
+    margin-top: 2px;
+}
+
+/*==================================================================*/
+
 /* Base styles */
-.station-container {
+.station-container_ {
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     max-width: 600px;
     margin: 0 auto;
@@ -11,13 +116,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Header styling */
-.station-header {
-    background-color: #ffffff;
-    padding: 16px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    position: relative;
-}
+
 
 .back-button {
     color: #007aff;
@@ -52,16 +151,9 @@
     background-color: #ffffff;
 }
 
-.station-item {
-    padding: 14px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    font-size: 17px;
-    color: #000000;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.2s;
-    position: relative;
-}
+
+
+
 
 .station-item:last-child {
     border-bottom: none;
@@ -81,12 +173,12 @@
 }
 
 /* Search bar styling */
-.search-container {
+.search-container_ {
     padding: 10px 16px;
     background-color: #f2f2f7;
 }
 
-.search-bar {
+.search-bar_ {
     background-color: #e4e4e8;
     border-radius: 10px;
     padding: 8px 15px;
@@ -108,7 +200,7 @@
 }
 
 /* Index list (alphabetical quick-jump) */
-.index-list {
+.index-list_ {
     position: absolute;
     right: 5px;
     top: 50%;
@@ -119,7 +211,7 @@
     color: #007aff;
 }
 
-.index-item {
+.index-item_ {
     padding: 2px 4px;
 }
 
@@ -141,19 +233,19 @@
 }
 
 .favorite-station {
-    background-color: rgba(255, 215, 0, 0.1); /* Subtle gold background */
-    border-left: 3px solid #FFD700; /* Gold border */
+    background-color: rgba(255, 215, 0, 0.02); /* Subtle gold background */
+    border-left: 3px solid rgba(255, 215, 0, 0.34); /* Gold border */
 }
 
-.station-name {
+.station-name_des {
     margin-left: 10px;
 }
 
 /* Section headers for favorites */
-.section-header {
+.section-header_des {
     font-size: 16px;
     font-weight: 600;
-    padding: 12px 20px;
+    padding: 5px 20px;
     background-color: #f2f2f7;
     color: #8e8e93;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -169,7 +261,7 @@
         background-color: #2c2c2e;
     }
 
-    .station-item {
+    .station-item_ {
         color: #ffffff;
         border-bottom-color: rgba(255, 255, 255, 0.1);
     }
@@ -196,7 +288,5 @@
         border-bottom-color: rgba(255, 255, 255, 0.1);
     }
 
-    .favorite-station {
-        background-color: rgba(255, 215, 0, 0.05);
-    }
 }
+
