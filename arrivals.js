@@ -398,11 +398,27 @@ function showArrivalDetail(arrival, station) {
                 const originalTime = currentArrival.timeToStation;
 
                 // Update only specific properties of the current arrival
+                const originalTime = currentArrival.timeToStation;
                 currentArrival.expectedArrival = updatedArrival.expectedArrival;
 
                 // Only update timeToStation if it's not drastically different
                 // This prevents jumping to a different train
                 const timeDifference = Math.abs(updatedArrival.timeToStation - originalTime);
+                
+                // Show notification if time has changed significantly (more than 2 minutes)
+                if (Math.abs(timeDifference) >= 120) {
+                    const timeChange = updatedArrival.timeToStation - originalTime;
+                    let message = '';
+                    if (timeChange > 0) {
+                        message = `Delay: ${Math.floor(Math.abs(timeChange)/60)}min ${Math.abs(timeChange)%60}s`;
+                    } else {
+                        message = `Early: ${Math.floor(Math.abs(timeChange)/60)}min ${Math.abs(timeChange)%60}s`;
+                    }
+                    
+                    showNotification(`${arrival.lineName} to ${arrival.destinationName || arrival.towards}: ${message}`, 
+                                   timeChange > 0 ? 'error' : 'info');
+                }
+                
                 if (timeDifference < 60) { // If difference is less than 60 seconds
                     currentArrival.timeToStation = updatedArrival.timeToStation;
                 }
@@ -626,4 +642,85 @@ function displayRTTArrivals(data, station) {
             displayRTTArrivals(data, station);
         });
     }, 60000);
+}
+
+// Function to find the updated version of an arrival in new data
+function findUpdatedArrival(newArrivals, originalArrival) {
+    // Try to match by vehicleId first (most accurate)
+    if (originalArrival.vehicleId) {
+        const matchedByVehicle = newArrivals.find(arrival => 
+            arrival.vehicleId === originalArrival.vehicleId &&
+            arrival.lineId === originalArrival.lineId
+        );
+        if (matchedByVehicle) return matchedByVehicle;
+    }
+    
+    // Fallback: match by line, destination, and approximate time
+    return newArrivals.find(arrival => 
+        arrival.lineId === originalArrival.lineId &&
+        (arrival.destinationName === originalArrival.destinationName || 
+         arrival.towards === originalArrival.towards) &&
+        Math.abs(arrival.timeToStation - originalArrival.timeToStation) < 120 // Within 2 minutes
+    );
+}
+
+// Function to find the next arrival for the same route
+function findNextArrival(newArrivals, originalArrival) {
+    // Filter arrivals for the same line and destination
+    const matchingArrivals = newArrivals.filter(arrival =>
+        arrival.lineId === originalArrival.lineId &&
+        (arrival.destinationName === originalArrival.destinationName ||
+         arrival.towards === originalArrival.towards)
+    );
+    
+    // Return the one with the smallest positive timeToStation that isn't the original
+    return matchingArrivals.reduce((closest, arrival) => {
+        if (arrival.timeToStation > 0 && 
+            (!closest || arrival.timeToStation < closest.timeToStation) &&
+            !(arrival.vehicleId && originalArrival.vehicleId && arrival.vehicleId === originalArrival.vehicleId)) {
+            return arrival;
+        }
+        return closest;
+    }, null);
+}
+
+// Function to show notification when arrival times change significantly
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Add styling
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        padding: '15px 20px',
+        borderRadius: '8px',
+        backgroundColor: type === 'error' ? '#ff4444' : '#4CAF50',
+        color: 'white',
+        zIndex: '1000',
+        fontSize: '14px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        transform: 'translateX(100%)',
+        transition: 'transform 0.3s ease-in-out'
+    });
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
 }

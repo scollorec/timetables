@@ -19,6 +19,11 @@
 <body>
 
     <div class="container" id="timetable-container">
+        <!-- Search bar will be inserted here by JavaScript -->
+        <div id="search-container" class="search-container" style="display: none;">
+            <input type="text" id="search-input" placeholder="Search for stations..." class="search-input">
+            <button id="search-close" class="search-close">✕</button>
+        </div>
         <!-- Timetable options will be inserted here by JavaScript -->
     </div>
 
@@ -26,6 +31,9 @@
     <div class="container" id="space">
         <!-- Timetable options will be inserted here by JavaScript -->
     </div>
+
+    <!-- Dark mode toggle button -->
+    <button id="dark-mode-toggle" class="dark-mode-toggle">🌙</button>
 
     <script src="app.js"></script>
     <script src="config.js"></script>
@@ -38,5 +46,17 @@
     <script src="errorHandler.js"></script>
     <script src="errorUI.js"></script>
  <!--   <script src="https://cdn.jsdelivr.net/npm/coi-serviceworker@0.1.6/coi-serviceworker.min.js"></script> -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
