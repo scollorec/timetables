@@ -4,6 +4,92 @@ body {
     padding: 0;
     background-color: #F2F2F7;
     color: #000000;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: #1c1c1e;
+    color: #ffffff;
+}
+
+body.dark-mode .option-card {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .filter-group {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .station-header {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .station-container {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .station-item {
+    background-color: #3c3c3e;
+    color: #ffffff;
+}
+
+body.dark-mode .platform-header {
+    background-color: #4c4c4e;
+    color: #ffffff;
+}
+
+body.dark-mode .line-filter {
+    background-color: #5c5c5e;
+    color: #ffffff;
+}
+
+body.dark-mode .search-container {
+    background-color: #2c2c2e;
+}
+
+body.dark-mode .search-input {
+    color: #ffffff;
+}
+
+body.dark-mode .section-header {
+    background-color: #2c2c2e;
+    color: #ffffff;
+}
+
+body.dark-mode .last-updated {
+    color: #aaaaaa;
+}
+
+/* Dark mode toggle button */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .container {
@@ -129,6 +215,35 @@ header {
 
 .filter-option input[type="checkbox"]:checked {
     background-color: #007AFF;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 8px 0;
+    background-color: transparent;
+}
+
+.search-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #8E8E93;
+    padding: 4px;
+    margin-left: 8px;
 }
 
 @media (max-width: 767px) {

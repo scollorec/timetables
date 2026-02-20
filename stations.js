@@ -504,24 +504,71 @@ function displayStations(stations, line) {
     const header = createLineHeader(line, handleBackButtonClick);
     container.appendChild(header);
 
+    // Show search bar
+    const searchContainer = document.getElementById('search-container');
+    searchContainer.style.display = 'flex';
+
+    // Add search functionality
+    const searchInput = document.getElementById('search-input');
+    const searchClose = document.getElementById('search-close');
+
+    searchInput.value = '';
+    
+    // Store original stations data
+    let originalStations = stations;
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        if (searchTerm.trim() === '') {
+            // If search is empty, show all stations
+            displayFilteredStations(originalStations);
+        } else {
+            // Filter stations based on search term
+            const filteredStations = originalStations.filter(station => 
+                station.commonName.toLowerCase().includes(searchTerm)
+            );
+            displayFilteredStations(filteredStations);
+        }
+    });
+
+    searchClose.addEventListener('click', function() {
+        searchInput.value = '';
+        searchContainer.style.display = 'none';
+        displayFilteredStations(originalStations);
+    });
+
     // Create stations list
     const stationsList = document.createElement('ul');
     stationsList.className = 'station-list';
 
-    // Add stations to the list
-    stations.forEach(station => {
-        const stationItem = document.createElement('li');
-        //stationItem.className = 'station-item';
-        //stationItem.textContent = station.commonName || station.name;
-        //stationItem.addEventListener('click', () => selectStation(station));
+    // Function to display filtered stations
+    function displayFilteredStations(stationsToDisplay) {
+        stationsList.innerHTML = ''; // Clear current list
+        
+        if (stationsToDisplay.length === 0) {
+            const noResultsItem = document.createElement('li');
+            noResultsItem.className = 'station-item no-results';
+            noResultsItem.textContent = 'No stations found';
+            stationsList.appendChild(noResultsItem);
+        } else {
+            // Add stations to the list
+            stationsToDisplay.forEach(station => {
+                const stationItem = document.createElement('li');
+                //stationItem.className = 'station-item';
+                //stationItem.textContent = station.commonName || station.name;
+                //stationItem.addEventListener('click', () => selectStation(station));
 
-        //stationsList.appendChild(stationItem);
-        stationsList.appendChild(createStationTile(station));
+                //stationsList.appendChild(stationItem);
+                stationsList.appendChild(createStationTile(station));
+            });
+        }
+    }
 
-    });
+    // Initially display all stations
+    displayFilteredStations(originalStations);
 
     container.appendChild(stationsList);
-
 
 
 }
