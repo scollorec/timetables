@@ -2,59 +2,399 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" href="lines.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link rel="stylesheet" href="station.css">
     <link rel="stylesheet" href="arrivals.css">
-
-    <title>Live Timetable</title>
-<link href="/timetables/favicon.ico" rel="icon" type="image/x-icon">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link href="/timetables/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <title>TFL Network Status</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #0d0d0f 0%, #1a1a1e 100%);
+            color: #f5f5f7;
+        }
+        
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 16px 100px;
+        }
+        
+        .app-header {
+            text-align: center;
+            padding: 24px 0 32px;
+        }
+        
+        .app-title {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+        
+        body.dark-mode .app-title {
+            color: #f5f5f7;
+        }
+        
+        .app-subtitle {
+            font-size: 17px;
+            color: #86868b;
+            font-weight: 400;
+        }
+        
+        .section-header {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin: 32px 0 16px;
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        body.dark-mode .section-header {
+            color: #f5f5f7;
+        }
+        
+        .section-header i {
+            font-size: 18px;
+            color: #007aff;
+        }
+        
+        .lines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+        
+        .line-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body.dark-mode .line-card {
+            background: rgba(44, 44, 46, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .line-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        body.dark-mode .line-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .line-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--line-color, #007aff);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .line-card:hover::before {
+            opacity: 1;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.1; }
+        }
+        
+        .status-dot.good { background: #34c759; }
+        .status-dot.warning { background: #ff9500; }
+        .status-dot.error { background: #ff3b30; }
+        
+        .line-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .line-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        body.dark-mode .line-name {
+            color: #f5f5f7;
+        }
+        
+        .line-status {
+            font-size: 14px;
+            color: #86868b;
+            font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .star-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+        
+        body.dark-mode .star-button {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .star-button i {
+            font-size: 18px;
+            color: #d1d1d6;
+            transition: all 0.2s ease;
+        }
+        
+        .star-button.active i {
+            color: #ffd60a;
+            transform: scale(1.1);
+        }
+        
+        .star-button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+        }
+        
+        body.dark-mode .star-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .star-button.active:hover {
+            background: rgba(255, 214, 10, 0.15);
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin-bottom: 24px;
+        }
+        
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-chip {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.6);
+            color: #1d1d1f;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        body.dark-mode .filter-chip {
+            background: rgba(44, 44, 46, 0.6);
+            color: #f5f5f7;
+        }
+        
+        .filter-chip.active {
+            background: #007aff;
+            color: white;
+        }
+        
+        .filter-chip:hover {
+            transform: scale(1.02);
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+        
+        body.dark-mode .dark-mode-toggle {
+            background: rgba(44, 44, 46, 0.8);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #86868b;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 122, 255, 0.2);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .app-title { font-size: 28px; }
+            .lines-grid { grid-template-columns: 1fr; }
+            .section-header { font-size: 20px; }
+        }
+    </style>
 </head>
 <body>
-
-    <div class="container" id="timetable-container">
-        <!-- Search bar will be inserted here by JavaScript -->
-        <div id="search-container" class="search-container" style="display: none;">
-            <input type="text" id="search-input" placeholder="Search for stations..." class="search-input">
-            <button id="search-close" class="search-close">✕</button>
+    <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="app-title">TFL Network Status</h1>
+            <p class="app-subtitle">Real-time service information</p>
+        </header>
+        
+        <div id="filter-bar" class="filter-bar"></div>
+        
+        <div id="favorites-section" style="display: none;">
+            <h2 class="section-header">
+                <i class="fas fa-star"></i>
+                Favorite Lines
+            </h2>
+            <div id="favorites-grid" class="lines-grid"></div>
         </div>
-        <!-- Timetable options will be inserted here by JavaScript -->
+        
+        <h2 class="section-header">
+            <i class="fas fa-subway"></i>
+            All Lines
+        </h2>
+        <div id="lines-grid" class="lines-grid">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+        </div>
     </div>
 
-
-    <div class="container" id="space">
-        <!-- Timetable options will be inserted here by JavaScript -->
-    </div>
-
-    <!-- Dark mode toggle button -->
-    <button id="dark-mode-toggle" class="dark-mode-toggle">🌙</button>
-
-    <script src="app.js"></script>
     <script src="config.js"></script>
     <script src="api.js"></script>
     <script src="utils.js"></script>
     <script src="storage.js"></script>
-    <script src="lines.js"></script>
-    <script src="stations.js"></script>
-    <script src="arrivals.js"></script>
     <script src="errorHandler.js"></script>
     <script src="errorUI.js"></script>
- <!--   <script src="https://cdn.jsdelivr.net/npm/coi-serviceworker@0.1.6/coi-serviceworker.min.js"></script> -->
+    <script src="tfl-app.js"></script>
+    
     <script>
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    }, function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(console.error);
             });
         }
     </script>
